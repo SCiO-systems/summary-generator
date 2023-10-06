@@ -20,7 +20,7 @@ pipelines:
               variables:
                 SONAR_HOST_URL: ${SONAR_HOST_URL}
                 SONAR_TOKEN: ${SONAR_TOKEN}
-                EXTRA_ARGS: '-Dsonar.projectKey=${BITBUCKET_REPO_SLUG} -Dsonar.projectName=${BITBUCKET_REPO_SLUG}'
+                EXTRA_ARGS: '-Dsonar.projectKey=${BITBUCKET_REPO_SLUG} -Dsonar.projectName=${BITBUCKET_REPO_SLUG} -Dsonar.python.coverage.reportPaths=coverage.xml'
       - step:
           name: Fetch .env file from S3
           image: amazon/aws-cli
