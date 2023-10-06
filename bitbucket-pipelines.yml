@@ -37,8 +37,6 @@ pipelines:
             - 'runner2'
           services:
             - docker
-          caches:
-            - docker
           script:
             - docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
             - docker build . -t ${DOCKERHUB_USERNAME}/${BITBUCKET_REPO_SLUG}:dev
@@ -57,7 +55,3 @@ pipelines:
               FROM: "devops@scio.systems"
               TO: "dev@scio.systems"
               SUBJECT: '${ALERT_TYPE}: Bitbucket Pipe Notification for ${BITBUCKET_REPO_SLUG} - ${BITBUCKET_BRANCH}'
-  
-definitions:
-  caches:
-    qodana: .qodana/cache
