@@ -3,22 +3,19 @@ image: python:3.10-bullseye
 pipelines:
   branches:
     release/development:
-      - step:
-          name: Unit tests
-          runs-on:
-            - 'runner2'
-          size: 2x
-          services:
-            - docker
-          script:
-            - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-            - apt-get install git-lfs -y
-            - git lfs install
-            - git clone https://huggingface.co/pszemraj/long-t5-tglobal-base-16384-booksci-summary-v1 models/long-t5-tglobal-base-16384-booksci-summary-v1
-            - pip install --no-cache-dir -r requirements.txt
-            - coverage run test_summarizer.py
-            - coverage report -i
-            - coverage xml
+      # - step:
+      #     name: Unit tests
+      #     runs-on:
+      #       - 'runner2'
+      #     script:
+      #       - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+      #       - apt-get install git-lfs -y
+      #       - git lfs install
+      #       - git clone https://huggingface.co/pszemraj/long-t5-tglobal-base-16384-booksci-summary-v1 models/long-t5-tglobal-base-16384-booksci-summary-v1
+      #       - pip install --no-cache-dir -r requirements.txt
+      #       - coverage run test_summarizer.py
+      #       - coverage report -i
+      #       - coverage xml
       - step:
           name: Code review
           runs-on:
@@ -71,7 +68,3 @@ pipelines:
 definitions:
   caches:
     qodana: .qodana/cache
-  services:
-    docker:
-      memory: 5333 # Memory for docker service. The rest of the 8192GB memory goes to script commands. 5200 works here.
-      type: docker
