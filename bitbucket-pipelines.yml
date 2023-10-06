@@ -3,31 +3,24 @@ image: python:3.10-bullseye
 pipelines:
   branches:
     release/development:
-      # - step:
-      #     name: Unit tests
-      #     runs-on:
-      #       - 'runner2'
-      #     script:
-      #       - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-      #       - apt-get install git-lfs -y
-      #       - git lfs install
-      #       - git clone https://huggingface.co/pszemraj/long-t5-tglobal-base-16384-booksci-summary-v1 models/long-t5-tglobal-base-16384-booksci-summary-v1
-      #       - pip install --no-cache-dir -r requirements.txt
-      #       - coverage run test_summarizer.py
-      #       - coverage report -i
-      #       - coverage xml
       - step:
-          name: Code review
+          name: Unit tests
           runs-on:
             - 'runner2'
-          image: jetbrains/qodana-python:2023.2
-          caches:
-            - qodana    
           script:
-            - export QODANA_TOKEN=${QODANA_TOKEN}  # Export the environment variable
-            - qodana --results-dir=${BITBUCKET_CLONE_DIR}/.qodana --report-dir=${BITBUCKET_CLONE_DIR}/.qodana/report --cache-dir=${BITBUCKET_CLONE_DIR}/.qodana/cache
-          artifacts:
-            - .qodana/report
+            - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+            - apt-get install git-lfs -y
+            - git lfs install
+            - git clone https://huggingface.co/pszemraj/long-t5-tglobal-base-16384-booksci-summary-v1 models/long-t5-tglobal-base-16384-booksci-summary-v1
+            - pip install --no-cache-dir -r requirements.txt
+            - coverage run test_summarizer.py
+            - coverage report -i
+            - coverage xml
+            - pipe: sonarsource/sonarqube-scan:1.2.0
+              variables:
+                SONAR_HOST_URL: ${SONAR_HOST_URL}
+                SONAR_TOKEN: ${SONAR_TOKEN}
+                EXTRA_ARGS: '-Dsonar.projectKey=${BITBUCKET_REPO_SLUG} -Dsonar.projectName=${BITBUCKET_REPO_SLUG}'
       - step:
           name: Fetch .env file from S3
           image: amazon/aws-cli
