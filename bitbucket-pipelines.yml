@@ -8,7 +8,6 @@ pipelines:
           runs-on:
             - 'runner2'
           script:
-            - ls -alh
             - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
             - apt-get install git-lfs -y
             - git lfs install
@@ -16,8 +15,7 @@ pipelines:
             - pip install --no-cache-dir -r requirements.txt
             - coverage run test_summarizer.py
             - coverage report -i
-            - coverage xml
-            - ls -alh
+            # - coverage xml
       - step:
           name: Code review
           runs-on:
