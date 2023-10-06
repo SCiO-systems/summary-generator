@@ -15,7 +15,7 @@ pipelines:
             - pip install --no-cache-dir -r requirements.txt
             - coverage run test_summarizer.py
             - coverage report -i
-            - coverage xml
+            - coverage xml -i
             - pipe: sonarsource/sonarqube-scan:1.2.0
               variables:
                 SONAR_HOST_URL: ${SONAR_HOST_URL}
